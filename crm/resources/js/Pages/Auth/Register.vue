@@ -5,13 +5,19 @@ import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
+import PasswordToggle from '@/Components/PasswordToggle.vue';
+import { ref } from 'vue';
 
 const form = useForm({
-    name: '',
-    email: '',
+    cnpj: '',
+    nmfs: '',
+    rsl: '',
     password: '',
     password_confirmation: '',
 });
+
+const showPassword = ref(false);
+const showPasswordConfirmation = ref(false); 
 
 const submit = () => {
     form.post(route('register'), {
@@ -28,70 +34,94 @@ const submit = () => {
 
         <form @submit.prevent="submit">
             <div>
-                <InputLabel for="name" value="Name" />
+                <InputLabel for="cnpj" value="CNPJ" />
 
                 <TextInput
-                    id="name"
+                    id="cnpj"
                     type="text"
                     class="mt-1 block w-full"
-                    v-model="form.name"
+                    v-model="form.cnpj"
                     required
                     autofocus
-                    autocomplete="name"
+                    autocomplete="cnpj"
+                    placeholder="Digite o CNPJ"
+                    maxlength="18"
+                    v-cnpj-mask
                 />
 
-                <InputError class="mt-2" :message="form.errors.name" />
+                <InputError class="mt-2" :message="form.errors.cnpj" />
             </div>
 
             <div class="mt-4">
-                <InputLabel for="email" value="Email" />
+                <InputLabel for="nmfs" value="Nome Fantasia" />
 
                 <TextInput
-                    id="email"
-                    type="email"
+                    id="nmfs"
+                    type="text"
                     class="mt-1 block w-full"
-                    v-model="form.email"
+                    v-model="form.nmfs"
                     required
-                    autocomplete="username"
+                    autocomplete="organization"
+                    placeholder="Ex: Minha Empresa"
                 />
 
-                <InputError class="mt-2" :message="form.errors.email" />
+                <InputError class="mt-2" :message="form.errors.nmfs" />
             </div>
 
             <div class="mt-4">
-                <InputLabel for="password" value="Password" />
+                <InputLabel for="rsl" value="Razão Social" />
 
                 <TextInput
-                    id="password"
-                    type="password"
+                    id="rsl"
+                    type="text"
                     class="mt-1 block w-full"
-                    v-model="form.password"
+                    v-model="form.rsl"
                     required
-                    autocomplete="new-password"
+                    autocomplete="organization"
+                    placeholder="Ex: Minha Empresa Ltda"
                 />
 
+                <InputError class="mt-2" :message="form.errors.rsl" />
+            </div>
+
+              <div class="mt-4">
+                <InputLabel for="password" value="Senha" />
+                
+                <div class="relative">
+                    <TextInput
+                        id="password"
+                        :type="showPassword ? 'text' : 'password'"
+                        class="mt-1 block w-full pr-10"
+                        v-model="form.password"
+                        required
+                        autocomplete="new-password"
+                        placeholder="**********"
+                        maxlength="12"
+                    />
+                    <PasswordToggle v-model="showPassword" />
+                </div>
+                
                 <InputError class="mt-2" :message="form.errors.password" />
             </div>
-
+            
             <div class="mt-4">
-                <InputLabel
-                    for="password_confirmation"
-                    value="Confirm Password"
-                />
-
-                <TextInput
-                    id="password_confirmation"
-                    type="password"
-                    class="mt-1 block w-full"
-                    v-model="form.password_confirmation"
-                    required
-                    autocomplete="new-password"
-                />
-
-                <InputError
-                    class="mt-2"
-                    :message="form.errors.password_confirmation"
-                />
+                <InputLabel for="password_confirmation" value="Confirmar Senha" />
+                
+                <div class="relative">
+                    <TextInput
+                        id="password_confirmation"
+                        :type="showPasswordConfirmation ? 'text' : 'password'" 
+                        class="mt-1 block w-full pr-10"
+                        v-model="form.password_confirmation"
+                        required
+                        autocomplete="new-password"
+                        placeholder="**********"
+                        maxlength="12"
+                    />
+                    <PasswordToggle v-model="showPasswordConfirmation" />
+                </div>
+                
+                <InputError class="mt-2" :message="form.errors.password_confirmation" />
             </div>
 
             <div class="mt-4 flex items-center justify-end">
@@ -99,7 +129,7 @@ const submit = () => {
                     :href="route('login')"
                     class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:text-gray-400 dark:hover:text-gray-100 dark:focus:ring-offset-gray-800"
                 >
-                    Already registered?
+                    Já tem uma conta?
                 </Link>
 
                 <PrimaryButton
@@ -107,7 +137,7 @@ const submit = () => {
                     :class="{ 'opacity-25': form.processing }"
                     :disabled="form.processing"
                 >
-                    Register
+                    Registrar
                 </PrimaryButton>
             </div>
         </form>

@@ -5,7 +5,9 @@ import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
+import PasswordToggle from '@/Components/PasswordToggle.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
+import { ref } from 'vue';
 
 defineProps<{
     canResetPassword?: boolean;
@@ -13,10 +15,12 @@ defineProps<{
 }>();
 
 const form = useForm({
-    email: '',
+    cnpj: '',
     password: '',
     remember: false,
 });
+
+const showPassword = ref(false);
 
 const submit = () => {
     form.post(route('login'), {
@@ -37,32 +41,41 @@ const submit = () => {
 
         <form @submit.prevent="submit">
             <div>
-                <InputLabel for="email" value="Email" />
+                <InputLabel for="cnpj" value="CNPJ" />
 
                 <TextInput
-                    id="email"
-                    type="email"
+                    id="cnpj"
+                    type="text"
                     class="mt-1 block w-full"
-                    v-model="form.email"
+                    v-model="form.cnpj"
                     required
                     autofocus
                     autocomplete="username"
+                    placeholder="Digite o CNPJ"
+                    maxlength="18"
+                    v-cnpj-mask
                 />
 
-                <InputError class="mt-2" :message="form.errors.email" />
+                <InputError class="mt-2" :message="form.errors.cnpj" />
             </div>
 
             <div class="mt-4">
-                <InputLabel for="password" value="Password" />
+                <InputLabel for="password" value="Senha" />
 
-                <TextInput
-                    id="password"
-                    type="password"
-                    class="mt-1 block w-full"
-                    v-model="form.password"
-                    required
-                    autocomplete="current-password"
-                />
+                <div class="relative">
+                    <TextInput
+                        id="password"
+                        :type="showPassword ? 'text' : 'password'"
+                        class="mt-1 block w-full pr-10"
+                        v-model="form.password"
+                        required
+                        autocomplete="current-password"
+                        placeholder="**********"
+                        maxlength="12"
+                    />
+                    
+                    <PasswordToggle v-model="showPassword" />
+                </div>
 
                 <InputError class="mt-2" :message="form.errors.password" />
             </div>
@@ -71,7 +84,7 @@ const submit = () => {
                 <label class="flex items-center">
                     <Checkbox name="remember" v-model:checked="form.remember" />
                     <span class="ms-2 text-sm text-gray-600 dark:text-gray-400"
-                        >Remember me</span
+                        >Lembre de mim</span
                     >
                 </label>
             </div>
@@ -82,7 +95,7 @@ const submit = () => {
                     :href="route('password.request')"
                     class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:text-gray-400 dark:hover:text-gray-100 dark:focus:ring-offset-gray-800"
                 >
-                    Forgot your password?
+                    Esqueceu a senha?
                 </Link>
 
                 <PrimaryButton
@@ -90,7 +103,7 @@ const submit = () => {
                     :class="{ 'opacity-25': form.processing }"
                     :disabled="form.processing"
                 >
-                    Log in
+                    Logar
                 </PrimaryButton>
             </div>
         </form>
