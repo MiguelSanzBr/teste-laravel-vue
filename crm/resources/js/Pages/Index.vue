@@ -9,6 +9,7 @@
 <script setup>
 import { usePage } from '@inertiajs/vue3';
 
+
 const page = usePage()
 const appName = page.props.appName
 </script>

@@ -17,8 +17,9 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-        'name',
-        'email',
+        'cnpj',
+        'nmfs',
+        'rsl',
         'password',
     ];
 
@@ -40,8 +41,24 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    /**
+     * Get the CNPJ for password reset.
+     */
+    public function getEmailForPasswordReset()
+    {
+        return $this->cnpj;
+    }
+
+    /**
+     * Route notifications for the mail channel.
+     * Como não temos email, retornamos null ou um valor padrão
+     */
+    public function routeNotificationForMail()
+    {
+        return null; // ou return $this->cnpj . '@sistema.com' se quiser usar CNPJ como "email"
     }
 }
