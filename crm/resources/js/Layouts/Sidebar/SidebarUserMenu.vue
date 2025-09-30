@@ -13,8 +13,12 @@ const emit = defineEmits<{
 
 const getUserInitial = () => {
     const user = usePage().props.auth?.user;
-    if (user?.name) {
-        return user.name.charAt(0).toUpperCase();
+    if (user?.rsl) {
+        const words = user.rsl.trim().split(/\s+/);
+        if (words[0].toLowerCase() === 'empresa' && words[1]?.toLowerCase() === 'teste') {
+            return 'T';
+        }
+        return words[0].charAt(0).toUpperCase();
     }
     return 'U';
 };
@@ -39,10 +43,7 @@ const getUserInitial = () => {
                 :class="isCollapsed ? 'opacity-0 w-0 overflow-hidden' : 'opacity-100 w-auto'"
             >
                 <p class="text-sm font-semibold text-gray-800 truncate">
-                    {{ $page.props.auth.user?.name || 'User' }}
-                </p>
-                <p class="text-xs text-gray-500 truncate mt-0.5" v-if="$page.props.auth.user?.email">
-                    {{ $page.props.auth.user.email }}
+                    {{ $page.props.auth.user?.rsl || 'Razão Social' }}
                 </p>
             </div>
             <svg 
@@ -72,7 +73,7 @@ const getUserInitial = () => {
                     <svg class="mr-3 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                     </svg>
-                    <span class="font-medium">Profile</span>
+                    <span class="font-medium">Perfil</span>
                 </Link>
                 <Link 
                     :href="route('logout')" 
@@ -84,7 +85,7 @@ const getUserInitial = () => {
                     <svg class="mr-3 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                     </svg>
-                    <span class="font-medium">Log Out</span>
+                    <span class="font-medium">Sair</span>
                 </Link>
             </div>
             
