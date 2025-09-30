@@ -1,50 +1,26 @@
+<!-- MobileMenu.vue (versão simplificada) -->
 <script setup lang="ts">
-import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
+defineProps<{
+    show: boolean;
+}>();
+
+const emit = defineEmits<{
+    (e: 'close'): void;
+}>();
 </script>
 
 <template>
-    <div
-        :class="{
-            block: $attrs.showingNavigationDropdown,
-            hidden: !$attrs.showingNavigationDropdown,
-        }"
-        class="sm:hidden"
-    >
-        <div class="space-y-1 pb-3 pt-2">
-            <ResponsiveNavLink
-                :href="route('dashboard')"
-                :active="route().current('dashboard')"
-            >
-                Dashboard
-            </ResponsiveNavLink>
-        </div>
-
-        <div
-            class="border-t border-gray-200 pb-1 pt-4 dark:border-gray-600"
-            v-if="$page.props.auth.user"
-        >
-            <div class="px-4">
-                <div
-                    class="text-base font-medium text-gray-800 dark:text-gray-200"
-                >
-                    {{ $page.props.auth.user?.name || 'User' }}
-                </div>
-                <div class="text-sm font-medium text-gray-500" v-if="$page.props.auth.user?.email">
-                    {{ $page.props.auth.user.email }}
-                </div>
-            </div>
-
-            <div class="mt-3 space-y-1">
-                <ResponsiveNavLink :href="route('profile.edit')">
-                    Profile
-                </ResponsiveNavLink>
-                <ResponsiveNavLink
-                    :href="route('logout')"
-                    method="post"
-                    as="button"
-                >
-                    Log Out
-                </ResponsiveNavLink>
+    <div v-if="show" class="sm:hidden">
+        <div 
+            class="fixed inset-0 bg-black/50 z-40"
+            @click="emit('close')"
+        ></div>
+        
+        <div class="fixed top-16 left-0 right-0 bg-white shadow-lg z-50 border-t border-gray-200">
+            <div class="px-4 py-2">
+                <a href="/dashboard" class="block px-3 py-2 text-gray-600 hover:bg-gray-100 rounded-md">
+                    Dashboard
+                </a>
             </div>
         </div>
     </div>
