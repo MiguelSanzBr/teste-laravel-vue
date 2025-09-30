@@ -3,23 +3,22 @@
 namespace App\Providers;
 
 use Illuminate\Support\Facades\Vite;
-use Illuminate\Support\ServiceProvider;
+use App\Models\Colaborador;
+use App\Policies\ColaboradorPolicy;
+use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
-class AppServiceProvider extends ServiceProvider
+class AuthServiceProvider extends ServiceProvider
 {
-    /**
-     * Register any application services.
-     */
-    public function register(): void
-    {
-        //
-    }
+    protected $policies = [
+        Colaborador::class => ColaboradorPolicy::class,
+    ];
 
-    /**
-     * Bootstrap any application services.
-     */
     public function boot(): void
     {
-        Vite::prefetch(concurrency: 3);
+         Vite::prefetch(concurrency: 3);
+       
+        $this->registerPolicies();
     }
 }
+       
+
