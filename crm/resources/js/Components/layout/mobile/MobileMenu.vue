@@ -1,4 +1,4 @@
-<!-- MobileMenu.vue (versão simplificada) -->
+<!-- MobileMenu.vue (versão corrigida) -->
 <script setup lang="ts">
 defineProps<{
     show: boolean;
@@ -20,6 +20,9 @@ const emit = defineEmits<{
             <div class="px-4 py-2">
                 <a href="/dashboard" class="block px-3 py-2 text-gray-600 hover:bg-gray-100 rounded-md">
                     Dashboard
+                </a>
+                <a href="/colaboradores" class="block px-3 py-2 text-gray-600 hover:bg-gray-100 rounded-md">
+                    Colaboradores
                 </a>
             </div>
         </div>

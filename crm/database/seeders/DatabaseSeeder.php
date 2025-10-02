@@ -44,7 +44,7 @@ class DatabaseSeeder extends Seeder
             $colaboradoresCount = Colaborador::where('company_id', $empresa->id)->count();
             
             if ($colaboradoresCount === 0) {
-                Colaborador::factory(rand(3, 5))
+                Colaborador::factory(rand(14, 30))
                     ->forCompany($empresa)
                     ->create();
 
