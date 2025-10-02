@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ColaboradorController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -17,9 +18,9 @@ Route::get('/', function () {
 
 
 // Dashboard
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 
 // Colaboradores
 Route::middleware(['auth', 'verified'])->group(function () {

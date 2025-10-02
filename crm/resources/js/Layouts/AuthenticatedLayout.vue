@@ -1,9 +1,9 @@
 <!-- AuthenticatedLayout.vue -->
 <script setup lang="ts">
 import { ref } from 'vue';
-import Sidebar from './Sidebar/Sidebar.vue';
-import MobileNavbar from './Mobile/MobileNavbar.vue';
-import MobileMenu from './Mobile/MobileMenu.vue';
+import Sidebar from '@/Components/layout/sidebar/Sidebar.vue';
+import MobileNavbar from '@/Components/layout/mobile/MobileNavbar.vue';
+import MobileMenu from '@/Components/layout/mobile/MobileMenu.vue';
 
 const showingNavigationDropdown = ref(false);
 const isSidebarCollapsed = ref(false);

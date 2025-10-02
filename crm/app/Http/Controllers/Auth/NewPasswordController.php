@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -13,6 +12,8 @@ use Illuminate\Validation\Rules;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
+use Illuminate\Support\Facades\DB;
+use App\Models\User;
 
 class NewPasswordController extends Controller
 {
@@ -22,8 +23,8 @@ class NewPasswordController extends Controller
     public function create(Request $request): Response
     {
         return Inertia::render('Auth/ResetPassword', [
-            'email' => $request->email,
             'token' => $request->route('token'),
+            'cnpj' => $request->input('cnpj', ''),
         ]);
     }
 
@@ -36,34 +37,41 @@ class NewPasswordController extends Controller
     {
         $request->validate([
             'token' => 'required',
-            'email' => 'required|email',
+            'cnpj' => 'required|string|max:18',
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
-        // Here we will attempt to reset the user's password. If it is successful we
-        // will update the password on an actual user model and persist it to the
-        // database. Otherwise we will parse the error and return the response.
-        $status = Password::reset(
-            $request->only('email', 'password', 'password_confirmation', 'token'),
-            function ($user) use ($request) {
-                $user->forceFill([
-                    'password' => Hash::make($request->password),
-                    'remember_token' => Str::random(60),
-                ])->save();
+        $cnpj = preg_replace('/[^0-9]/', '', $request->cnpj);
 
-                event(new PasswordReset($user));
-            }
-        );
+        $resetRecord = DB::table('password_reset_tokens')
+            ->where('cnpj', $cnpj)
+            ->first();
 
-        // If the password was successfully reset, we will redirect the user back to
-        // the application's home authenticated view. If there is an error we can
-        // redirect them back to where they came from with their error message.
-        if ($status == Password::PASSWORD_RESET) {
-            return redirect()->route('login')->with('status', __($status));
+        if (!$resetRecord) {
+            throw ValidationException::withMessages([
+                'cnpj' => ['Token inválido ou expirado.'],
+            ]);
         }
 
-        throw ValidationException::withMessages([
-            'email' => [trans($status)],
-        ]);
+        if (!Hash::check($request->token, $resetRecord->token)) {
+            throw ValidationException::withMessages([
+                'token' => ['Token inválido.'],
+            ]);
+        }
+
+        $user = User::where('cnpj', $cnpj)->first();
+
+        if (!$user) {
+            throw ValidationException::withMessages([
+                'cnpj' => ['CNPJ não encontrado.'],
+            ]);
+        }
+
+        $user->password = Hash::make($request->password);
+        $user->save();
+
+        DB::table('password_reset_tokens')->where('cnpj', $cnpj)->delete();
+
+        return redirect()->route('login')->with('status', 'Senha redefinida com sucesso!');
     }
 }

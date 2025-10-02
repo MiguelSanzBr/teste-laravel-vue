@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import GuestLayout from '@/Layouts/GuestLayout.vue';
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
+import InputError from '@/Components/ui/InputError.vue';
+import InputLabel from '@/Components/ui/InputLabel.vue';
+import PrimaryButton from '@/Components/ui/PrimaryButton.vue';
+import TextInput from '@/Components/ui/TextInput.vue';
 import { Head, useForm } from '@inertiajs/vue3';
 
 defineProps<{
@@ -11,7 +11,7 @@ defineProps<{
 }>();
 
 const form = useForm({
-    email: '',
+    cnpj: '',
 });
 
 const submit = () => {
@@ -21,12 +21,11 @@ const submit = () => {
 
 <template>
     <GuestLayout>
-        <Head title="Forgot Password" />
+        <Head title="Recuperar Senha" />
 
         <div class="mb-4 text-sm text-gray-600 dark:text-gray-400">
-            Forgot your password? No problem. Just let us know your email
-            address and we will email you a password reset link that will allow
-            you to choose a new one.
+            Esqueceu sua senha? Sem problemas. Informe seu CNPJ
+            e enviaremos um link para redefinir sua senha.
         </div>
 
         <div
@@ -38,19 +37,22 @@ const submit = () => {
 
         <form @submit.prevent="submit">
             <div>
-                <InputLabel for="email" value="Email" />
+                <InputLabel for="cnpj" value="CNPJ" />
 
                 <TextInput
-                    id="email"
-                    type="email"
+                    id="cnpj"
+                    type="text"
                     class="mt-1 block w-full"
-                    v-model="form.email"
+                    v-model="form.cnpj"
                     required
                     autofocus
-                    autocomplete="username"
+                    autocomplete="cnpj"
+                    placeholder="Digite o CNPJ"
+                    maxlength="18"
+                    v-cnpj-mask
                 />
 
-                <InputError class="mt-2" :message="form.errors.email" />
+                <InputError class="mt-2" :message="form.errors.cnpj" />
             </div>
 
             <div class="mt-4 flex items-center justify-end">
@@ -58,7 +60,7 @@ const submit = () => {
                     :class="{ 'opacity-25': form.processing }"
                     :disabled="form.processing"
                 >
-                    Email Password Reset Link
+                    Enviar Link de Redefinição
                 </PrimaryButton>
             </div>
         </form>

@@ -3,14 +3,14 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, useForm, router } from '@inertiajs/vue3';
 import { ref, watch } from 'vue';
 
-import ColaboradorTable from '@/Components/Colaboradores/ColaboradorTable.vue';
-import ColaboradorSearch from '@/Components/Colaboradores/ColaboradorSearch.vue';
-import ColaboradorPagination from '@/Components/Colaboradores/ColaboradorPagination.vue';
-import ColaboradorEmptyState from '@/Components/Colaboradores/ColaboradorEmptyState.vue';
-import CreateColaboradorModal from '@/Components/Colaboradores/modals/CreateColaboradorModal.vue';
-import EditColaboradorModal from '@/Components/Colaboradores/modals/EditColaboradorModal.vue';
-import ShowColaboradorModal from '@/Components/Colaboradores/modals/ShowColaboradorModal.vue';
-import DeleteColaboradorModal from '@/Components/Colaboradores/modals/DeleteColaboradorModal.vue';
+import ColaboradorTable from '@/Components/features/colaboradores/components/ColaboradorTable.vue';
+import ColaboradorSearch from '@/Components/features/colaboradores/components/ColaboradorSearch.vue';
+import ColaboradorPagination from '@/Components/features/colaboradores/components/ColaboradorPagination.vue';
+import ColaboradorEmptyState from '@/Components/features/colaboradores/components/ColaboradorEmptyState.vue';
+import CreateColaboradorModal from '@/Components/features/colaboradores/modals/CreateColaboradorModal.vue';
+import EditColaboradorModal from '@/Components/features/colaboradores/modals/EditColaboradorModal.vue';
+import ShowColaboradorModal from '@/Components/features/colaboradores/modals/ShowColaboradorModal.vue';
+import DeleteColaboradorModal from '@/Components/features/colaboradores/modals/DeleteColaboradorModal.vue';
 
 interface Colaborador {
     id: number;
@@ -57,21 +57,25 @@ const editForm = useForm({
     email: '',
 });
 
-// Watch para pesquisa em tempo real
+// Watch para pesquisa em tempo real com debounce manual
+let debounceTimeout: ReturnType<typeof setTimeout> | null = null;
 watch(search, (newSearch) => {
-    isLoading.value = true;
-    router.get(route('colaboradores.index'), 
-        { search: newSearch }, 
-        { 
-            preserveState: true, 
-            replace: true,
-            preserveScroll: true,
-            onFinish: () => {
-                isLoading.value = false;
+    if (debounceTimeout) clearTimeout(debounceTimeout);
+    debounceTimeout = setTimeout(() => {
+        isLoading.value = true;
+        router.get(route('colaboradores.index'), 
+            { search: newSearch }, 
+            { 
+                preserveState: true, 
+                replace: true,
+                preserveScroll: true,
+                onFinish: () => {
+                    isLoading.value = false;
+                }
             }
-        }
-    );
-}, { debounce: 500 });
+        );
+    }, 500);
+});
 
 // Funções de modal
 const openModal = (type: 'create' | 'edit' | 'show' | 'delete', colaborador?: Colaborador) => {

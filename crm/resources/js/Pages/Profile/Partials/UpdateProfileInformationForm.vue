@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
+import InputError from '@/Components/ui/InputError.vue';
+import InputLabel from '@/Components/ui/InputLabel.vue';
+import PrimaryButton from '@/Components/ui/PrimaryButton.vue';
+import TextInput from '@/Components/ui/TextInput.vue';
 import { useForm, usePage } from '@inertiajs/vue3';
 import { onMounted } from 'vue';
 

@@ -1,22 +1,27 @@
 <script setup lang="ts">
 import GuestLayout from '@/Layouts/GuestLayout.vue';
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
+import InputError from '@/Components/ui/InputError.vue';
+import InputLabel from '@/Components/ui/InputLabel.vue';
+import PrimaryButton from '@/Components/ui/PrimaryButton.vue';
+import TextInput from '@/Components/ui/TextInput.vue';
 import { Head, useForm } from '@inertiajs/vue3';
+import PasswordToggle from '@/Components/ui/PasswordToggle.vue';
+import { ref } from 'vue';
 
 const props = defineProps<{
-    email: string;
+    cnpj: string;
     token: string;
 }>();
 
 const form = useForm({
     token: props.token,
-    email: props.email,
+    cnpj: props.cnpj,
     password: '',
     password_confirmation: '',
 });
+
+const showPassword = ref(false);
+const showPasswordConfirmation = ref(false);
 
 const submit = () => {
     form.post(route('password.store'), {
@@ -29,55 +34,65 @@ const submit = () => {
 
 <template>
     <GuestLayout>
-        <Head title="Reset Password" />
+        <Head title="Redefinir Senha" />
 
         <form @submit.prevent="submit">
             <div>
-                <InputLabel for="email" value="Email" />
+                <InputLabel for="cnpj" value="CNPJ" />
 
                 <TextInput
-                    id="email"
-                    type="email"
+                    id="cnpj"
+                    type="text"
                     class="mt-1 block w-full"
-                    v-model="form.email"
+                    v-model="form.cnpj"
                     required
                     autofocus
-                    autocomplete="username"
+                    autocomplete="cnpj"
+                    placeholder="Digite o CNPJ"
+                    maxlength="18"
+                    v-cnpj-mask
                 />
 
-                <InputError class="mt-2" :message="form.errors.email" />
+                <InputError class="mt-2" :message="form.errors.cnpj" />
             </div>
 
             <div class="mt-4">
-                <InputLabel for="password" value="Password" />
-
-                <TextInput
-                    id="password"
-                    type="password"
-                    class="mt-1 block w-full"
-                    v-model="form.password"
-                    required
-                    autocomplete="new-password"
-                />
-
+                <InputLabel for="password" value="Nova Senha" />
+                
+                <div class="relative">
+                    <TextInput
+                        id="password"
+                        :type="showPassword ? 'text' : 'password'"
+                        class="mt-1 block w-full pr-10"
+                        v-model="form.password"
+                        required
+                        autocomplete="new-password"
+                        placeholder="**********"
+                        maxlength="12"
+                    />
+                    <PasswordToggle v-model="showPassword" />
+                </div>
+                
                 <InputError class="mt-2" :message="form.errors.password" />
             </div>
 
             <div class="mt-4">
-                <InputLabel
-                    for="password_confirmation"
-                    value="Confirm Password"
-                />
-
-                <TextInput
-                    id="password_confirmation"
-                    type="password"
-                    class="mt-1 block w-full"
-                    v-model="form.password_confirmation"
-                    required
-                    autocomplete="new-password"
-                />
-
+                <InputLabel for="password_confirmation" value="Confirmar Senha" />
+                
+                <div class="relative">
+                    <TextInput
+                        id="password_confirmation"
+                        :type="showPasswordConfirmation ? 'text' : 'password'"
+                        class="mt-1 block w-full pr-10"
+                        v-model="form.password_confirmation"
+                        required
+                        autocomplete="new-password"
+                        placeholder="**********"
+                        maxlength="12"
+                    />
+                    <PasswordToggle v-model="showPasswordConfirmation" />
+                </div>
+                
                 <InputError
                     class="mt-2"
                     :message="form.errors.password_confirmation"
@@ -89,7 +104,7 @@ const submit = () => {
                     :class="{ 'opacity-25': form.processing }"
                     :disabled="form.processing"
                 >
-                    Reset Password
+                    Redefinir Senha
                 </PrimaryButton>
             </div>
         </form>

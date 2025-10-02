@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import NavLink from '@/Components/NavLink.vue';
+import NavLink from '@/Components/ui/NavLink.vue';
 
 defineProps<{
     isCollapsed: boolean;

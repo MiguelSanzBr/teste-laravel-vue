@@ -40,7 +40,7 @@ class ColaboradorController extends Controller
                 'ativo' => $colaborador->isAtivo(),
             ]);
 
-        return Inertia::render('Colaboradores/Index', [
+        return Inertia::render('Colaboradores', [
             'colaboradores' => $colaboradores,
             'filters' => $request->only(['search']),
         ]);

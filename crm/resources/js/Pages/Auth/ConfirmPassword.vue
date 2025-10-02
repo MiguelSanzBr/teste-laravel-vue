@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import GuestLayout from '@/Layouts/GuestLayout.vue';
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
+import InputError from '@/Components/ui/InputError.vue';
+import InputLabel from '@/Components/ui/InputLabel.vue';
+import PrimaryButton from '@/Components/ui/PrimaryButton.vue';
+import TextInput from '@/Components/ui/TextInput.vue';
 import { Head, useForm } from '@inertiajs/vue3';
 
 const form = useForm({
-    password: '',
+    cnpj: '',
 });
 
 const submit = () => {
@@ -21,26 +21,31 @@ const submit = () => {
 
 <template>
     <GuestLayout>
-        <Head title="Confirm Password" />
+        <Head title="Confirmar Acesso" />
 
         <div class="mb-4 text-sm text-gray-600 dark:text-gray-400">
-            This is a secure area of the application. Please confirm your
-            password before continuing.
+            Esta é uma área segura do aplicativo. Por favor, confirme seu CNPJ
+            antes de continuar.
         </div>
 
         <form @submit.prevent="submit">
             <div>
-                <InputLabel for="password" value="Password" />
+                <InputLabel for="cnpj" value="CNPJ" />
+
                 <TextInput
-                    id="password"
-                    type="password"
+                    id="cnpj"
+                    type="text"
                     class="mt-1 block w-full"
-                    v-model="form.password"
+                    v-model="form.cnpj"
                     required
-                    autocomplete="current-password"
                     autofocus
+                    autocomplete="cnpj"
+                    placeholder="Digite o CNPJ"
+                    maxlength="18"
+                    v-cnpj-mask
                 />
-                <InputError class="mt-2" :message="form.errors.password" />
+
+                <InputError class="mt-2" :message="form.errors.cnpj" />
             </div>
 
             <div class="mt-4 flex justify-end">
@@ -49,7 +54,7 @@ const submit = () => {
                     :class="{ 'opacity-25': form.processing }"
                     :disabled="form.processing"
                 >
-                    Confirm
+                    Confirmar
                 </PrimaryButton>
             </div>
         </form>

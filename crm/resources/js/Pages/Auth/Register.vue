@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import GuestLayout from '@/Layouts/GuestLayout.vue';
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
+import InputError from '@/Components/ui/InputError.vue';
+import InputLabel from '@/Components/ui/InputLabel.vue';
+import PrimaryButton from '@/Components/ui/PrimaryButton.vue';
+import TextInput from '@/Components/ui/TextInput.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
-import PasswordToggle from '@/Components/PasswordToggle.vue';
+import PasswordToggle from '@/Components/ui/PasswordToggle.vue';
 import { ref } from 'vue';
 
 const form = useForm({
