@@ -4,9 +4,20 @@ import InputLabel from '@/Components/ui/InputLabel.vue';
 import PrimaryButton from '@/Components/ui/PrimaryButton.vue';
 import TextInput from '@/Components/ui/TextInput.vue';
 import { useForm, usePage } from '@inertiajs/vue3';
-import { onMounted } from 'vue';
+import { ref, onMounted } from 'vue';
 
-const user = usePage().props.auth.user;
+const page = usePage();
+const user = page.props.auth.user;
+
+// Interface para garantir a tipagem
+interface AppUser {
+    cnpj?: string;
+    nmfs?: string;
+    rsl?: string;
+}
+
+// Cast seguro do usuário
+const appUser = user as AppUser;
 
 // Função para formatar CNPJ
 const formatCNPJ = (cnpj: string): string => {
@@ -18,13 +29,38 @@ const formatCNPJ = (cnpj: string): string => {
 };
 
 const form = useForm({
-    cnpj: formatCNPJ(user.cnpj || ''),
-    nmfs: user.nmfs || '',
-    rsl: user.rsl || '',
+    cnpj: formatCNPJ(appUser.cnpj || ''),
+    nmfs: appUser.nmfs || '',
+    rsl: appUser.rsl || '',
 });
 
+// Função para aplicar máscara de CNPJ em tempo real
+const applyCNPJMask = (event: Event) => {
+    const target = event.target as HTMLInputElement;
+    let value = target.value.replace(/\D/g, '');
+    
+    if (value.length <= 14) {
+        if (value.length > 12) {
+            value = value.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{0,2})/, '$1.$2.$3/$4-$5');
+        } else if (value.length > 8) {
+            value = value.replace(/(\d{2})(\d{3})(\d{3})(\d{0,4})/, '$1.$2.$3/$4');
+        } else if (value.length > 5) {
+            value = value.replace(/(\d{2})(\d{3})(\d{0,3})/, '$1.$2.$3');
+        } else if (value.length > 2) {
+            value = value.replace(/(\d{2})(\d{0,3})/, '$1.$2');
+        }
+        form.cnpj = value;
+    }
+};
+
 const submit = () => {
-    form.patch(route('profile.update'), {
+    // Remove a formatação do CNPJ antes de enviar
+    const cleanedData = {
+        ...form.data(),
+        cnpj: form.cnpj.replace(/\D/g, '')
+    };
+    
+    form.transform(() => cleanedData).patch(route('profile.update'), {
         preserveScroll: true,
         onSuccess: () => {
             console.log('Perfil atualizado com sucesso!');
@@ -33,6 +69,16 @@ const submit = () => {
             console.log('Erros no formulário:', errors);
         },
     });
+};
+
+// Diretiva para máscara de CNPJ
+const vCnpjMask = {
+    mounted(el: HTMLInputElement) {
+        el.addEventListener('input', applyCNPJMask);
+    },
+    unmounted(el: HTMLInputElement) {
+        el.removeEventListener('input', applyCNPJMask);
+    }
 };
 </script>
 
@@ -63,7 +109,7 @@ const submit = () => {
                     required
                     autofocus
                     autocomplete="cnpj"
-                    placeholder="Digite o CNPJ"
+                    placeholder="00.000.000/0000-00"
                     maxlength="18"
                     v-cnpj-mask
                 />

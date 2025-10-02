@@ -11,8 +11,14 @@ const emit = defineEmits<{
     'close-user-dropdown': [];
 }>();
 
+// Interface local para o usuário
+interface AppUser {
+    rsl?: string;
+}
+
 const getUserInitial = () => {
-    const user = usePage().props.auth?.user;
+    const user = usePage().props.auth?.user as AppUser | undefined;
+    
     if (user?.rsl) {
         const words = user.rsl.trim().split(/\s+/);
         if (words[0].toLowerCase() === 'empresa' && words[1]?.toLowerCase() === 'teste') {
@@ -21,6 +27,12 @@ const getUserInitial = () => {
         return words[0].charAt(0).toUpperCase();
     }
     return 'U';
+};
+
+// Helper para obter o nome do usuário com tipo seguro
+const getUserName = () => {
+    const user = usePage().props.auth?.user as AppUser | undefined;
+    return user?.rsl || 'Razão Social';
 };
 </script>
 
@@ -43,7 +55,7 @@ const getUserInitial = () => {
                 :class="isCollapsed ? 'opacity-0 w-0 overflow-hidden' : 'opacity-100 w-auto'"
             >
                 <p class="text-sm font-semibold text-gray-800 truncate">
-                    {{ $page.props.auth.user?.rsl || 'Razão Social' }}
+                    {{ getUserName() }}
                 </p>
             </div>
             <svg 
@@ -59,7 +71,7 @@ const getUserInitial = () => {
             </svg>
         </button>
 
-        <!-- Dropdown Menu Atualizado -->
+        <!-- Dropdown Menu -->
         <div 
             v-show="showingUserDropdown"
             class="absolute bottom-full left-3 right-3 mb-3 bg-white rounded-xl shadow-xl border border-gray-200 z-50 backdrop-blur-sm bg-opacity-95"

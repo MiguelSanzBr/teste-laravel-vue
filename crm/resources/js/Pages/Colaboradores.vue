@@ -3,14 +3,14 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, useForm, router } from '@inertiajs/vue3';
 import { ref, watch } from 'vue';
 
-import ColaboradorTable from '@/Components/features/colaboradores/components/ColaboradorTable.vue';
-import ColaboradorSearch from '@/Components/features/colaboradores/components/ColaboradorSearch.vue';
-import ColaboradorPagination from '@/Components/features/colaboradores/components/ColaboradorPagination.vue';
-import ColaboradorEmptyState from '@/Components/features/colaboradores/components/ColaboradorEmptyState.vue';
-import CreateColaboradorModal from '@/Components/features/colaboradores/modals/CreateColaboradorModal.vue';
-import EditColaboradorModal from '@/Components/features/colaboradores/modals/EditColaboradorModal.vue';
-import ShowColaboradorModal from '@/Components/features/colaboradores/modals/ShowColaboradorModal.vue';
-import DeleteColaboradorModal from '@/Components/features/colaboradores/modals/DeleteColaboradorModal.vue';
+import ColaboradorTable from './Colaboradores/components/ColaboradorTable.vue';
+import ColaboradorSearch from './Colaboradores/components/ColaboradorSearch.vue';
+import ColaboradorPagination from './Colaboradores/components/ColaboradorPagination.vue';
+import ColaboradorEmptyState from './Colaboradores/components/ColaboradorEmptyState.vue';
+import CreateColaboradorModal from './Colaboradores/modals/CreateColaboradorModal.vue';
+import EditColaboradorModal from './Colaboradores/modals/EditColaboradorModal.vue';
+import ShowColaboradorModal from './Colaboradores/modals/ShowColaboradorModal.vue';
+import DeleteColaboradorModal from './Colaboradores/modals/DeleteColaboradorModal.vue';
 
 interface Colaborador {
     id: number;

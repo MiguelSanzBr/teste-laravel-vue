@@ -1,9 +1,9 @@
 <script setup>
 import { Head } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import StatsCards from '@/Components/features/dashboard/StatsCards.vue';
-import EvolutionTable from '@/Components/features/dashboard/EvolutionTable.vue';
-import QuickActions from '@/Components/features/dashboard/QuickActions.vue';
+import StatsCards from './Dashboard/StatsCards.vue';
+import EvolutionTable from './Dashboard/EvolutionTable.vue';
+import QuickActions from './Dashboard/QuickActions.vue';
 
 defineProps({
     stats: Object,
